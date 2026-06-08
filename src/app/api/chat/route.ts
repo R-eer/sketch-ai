@@ -17,7 +17,7 @@ export async function POST(req: NextRequest) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${process.env["Groq-api-key"]}`,
+        "Authorization": `Bearer ${process.env.Groq_api_key12}`,
       },
       body: JSON.stringify({
         model: "llama-3.1-8b-instant",
