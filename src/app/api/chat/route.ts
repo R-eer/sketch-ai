@@ -1,7 +1,4 @@
-import Anthropic from "@anthropic-ai/sdk";
 import { NextRequest, NextResponse } from "next/server";
-
-const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
 const SYSTEM_PROMPT = `You are Doodle, a friendly and creative AI assistant for Sketch AI — an AI-powered website builder. Your personality is warm, enthusiastic, and creative. You help users turn their ideas into beautiful websites.
 
@@ -16,20 +13,30 @@ export async function POST(req: NextRequest) {
   try {
     const { messages } = await req.json();
 
-    const response = await client.messages.create({
-      model: "claude-haiku-4-5-20251001",
-      max_tokens: 300,
-      system: SYSTEM_PROMPT,
-      messages: messages.map((m: { role: string; content: string }) => ({
-        role: m.role === "doodle" ? "assistant" : "user",
-        content: m.content,
-      })),
+    const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${process.env.GROQ_API_KEY}`,
+      },
+      body: JSON.stringify({
+        model: "llama-3.1-8b-instant",
+        max_tokens: 300,
+        messages: [
+          { role: "system", content: SYSTEM_PROMPT },
+          ...messages.map((m: { role: string; content: string }) => ({
+            role: m.role === "doodle" ? "assistant" : "user",
+            content: m.content,
+          })),
+        ],
+      }),
     });
 
-    const text = response.content[0].type === "text" ? response.content[0].text : "";
+    const data = await res.json();
+    const text = data.choices?.[0]?.message?.content ?? "Hmm, my pencil slipped! Try again ✏️";
     return NextResponse.json({ text });
   } catch (err) {
     console.error(err);
-    return NextResponse.json({ text: "Hmm, my pencil slipped! Try again in a moment ✏️" }, { status: 500 });
+    return NextResponse.json({ text: "Hmm, my pencil slipped! Try again ✏️" }, { status: 500 });
   }
 }
