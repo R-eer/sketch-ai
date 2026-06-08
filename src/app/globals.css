@@ -1,17 +1,10 @@
-@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap');
-
 @import "tailwindcss";
 
 @theme inline {
-  --font-caveat: 'Caveat', cursive;
-  --font-inter: 'Inter', sans-serif;
+  --font-caveat: var(--font-caveat);
+  --font-inter: var(--font-inter);
   --color-background: #0a0a0a;
   --color-foreground: #ededed;
-}
-
-:root {
-  --background: #0a0a0a;
-  --foreground: #ededed;
 }
 
 * {
@@ -21,24 +14,16 @@
 body {
   background: #0a0a0a;
   color: #ededed;
-  font-family: 'Inter', sans-serif;
-}
-
-.font-caveat {
-  font-family: 'Caveat', cursive;
-}
-
-.font-inter {
-  font-family: 'Inter', sans-serif;
+  font-family: var(--font-inter), sans-serif;
 }
 
 ::-webkit-scrollbar {
   width: 4px;
 }
 ::-webkit-scrollbar-track {
-  background: #111;
+  background: #0a0a0a;
 }
 ::-webkit-scrollbar-thumb {
-  background: #333;
+  background: #2a2a2a;
   border-radius: 2px;
 }
